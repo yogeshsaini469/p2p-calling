@@ -28,28 +28,24 @@ io.on("connection", (socket) => {
 
   socket.on('callEnded', () => {
     console.log('Call ended');
-    // Emit the 'callEnded' event to all connected sockets
     io.emit('callEnded');
   });
 });
 
 // Export the serverless function handler
 module.exports = async (req, res) => {
-  // Ensure that the request body is parsed as JSON
-  const body = JSON.parse(req.body);
-  const eventType = body.eventType;
-  const payload = body.payload;
-
   try {
+    // Parse the request body as JSON
+    const body = JSON.parse(req.body);
+    const eventType = body.eventType;
+    const payload = body.payload;
+
     // Handle socket.io events based on the event type
     if (eventType === 'connection') {
-      // Emit the event to all connected sockets
       io.emit('connection', payload);
     } else if (eventType === 'sdp') {
-      // Broadcast the SDP data to all sockets except the sender
       io.emit('sdp', payload);
     } else if (eventType === 'candidate') {
-      // Broadcast the ICE candidate data to all sockets except the sender
       io.emit('candidate', payload);
     } else {
       // Unknown event type
