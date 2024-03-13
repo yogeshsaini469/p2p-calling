@@ -20,7 +20,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vercel dev",  
+    "start": "vercel dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
