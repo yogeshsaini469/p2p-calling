@@ -1,7 +1,6 @@
 // /api/server.js
 
 const express = require('express');
-const serverless = require('serverless-http');
 const http = require('http');
 const socketIO = require('socket.io');
 
@@ -37,4 +36,4 @@ io.of('/webRTCPeers').on('connection', socket => {
     });
 });
 
-module.exports.handler = serverless(app);
+module.exports = app;
