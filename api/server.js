@@ -34,29 +34,16 @@ io.on("connection", (socket) => {
 
 // Export the serverless function handler
 module.exports = async (req, res) => {
-  try {
-    // Parse the request body as JSON
-    const body = JSON.parse(req.body);
-    const eventType = body.eventType;
-    const payload = body.payload;
-
-    // Handle socket.io events based on the event type
-    if (eventType === 'connection') {
-      io.emit('connection', payload);
-    } else if (eventType === 'sdp') {
-      io.emit('sdp', payload);
-    } else if (eventType === 'candidate') {
-      io.emit('candidate', payload);
-    } else {
-      // Unknown event type
-      throw new Error('Unknown event type');
+  // Set up socket.io connection
+  io.httpServer = {
+    on: (event, cb) => {
+      if (event === 'request') {
+        cb(req, res);
+      }
     }
+  };
+  io.attach(io.httpServer);
 
-    // Send a success response
-    res.status(200).send('Success');
-  } catch (error) {
-    // Handle errors and send an error response
-    console.error('Error handling socket.io event:', error);
-    res.status(500).send('Internal Server Error');
-  }
+  // Handle socket.io events
+  await io.httpServer.emit('connection', { socket: true });
 };
