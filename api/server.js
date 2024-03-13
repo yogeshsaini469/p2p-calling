@@ -18,7 +18,13 @@ module.exports = (req, res) => {
                 console.log(`${socket.id} has disconnected.`);
             });
 
-            // Handle other socket events (sdp, candidate, callEnded) here...
+            socket.on('sdp', data => {
+                socket.broadcast.emit('sdp', data);
+            });
+
+            socket.on('candidate', data => {
+                socket.broadcast.emit('candidate', data);
+            });
 
             socket.on('callEnded', () => {
                 console.log('Call ended');
